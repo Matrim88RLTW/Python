@@ -1,0 +1,40 @@
+# packages
+import numpy as np
+import pyautogui as pg
+import time
+
+def action() :
+# timers
+    pg.PAUSE = np.random.randint(2, 4)
+# menu click
+    pg.click(x=np.random.randint(59, 63), y=np.random.randint(767, 781))
+# action locator click
+    pg.click(x=np.random.randint(444, 448), y=np.random.randint(763, 767))
+    pg.click(x=np.random.randint(444, 448), y=np.random.randint(763, 767))
+# action click
+    pg.leftClick(x=np.random.randint(958, 962), y=np.random.randint(576, 580))
+# movement click
+    pg.click(x=np.random.randint(1577, 1581), y=np.random.randint(958, 962),)
+# close random windows in app
+    pg.press('esc', presses=3)
+# return to menu (reset) click
+    pg.click(x=np.random.randint(59, 63), y=np.random.randint(767, 781))
+# random time between attacks
+
+# dispatch function
+def rotation() :
+    for i in range(0, 3, 1):
+        action()
+    return()
+# cycle windows function
+def next() :
+    rand = np.random.randint(75, 90)
+    pg.getWindowsWithTitle("League of Kingdoms")[2].activate()
+    time.sleep(rand)
+    rotation()
+# screen refresh
+def refresh() :
+    for i in range(1,6,1):
+        next()
+    pg.press('f5', presses=2)
+    next()
