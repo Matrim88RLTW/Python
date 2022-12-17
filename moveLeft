@@ -1,0 +1,20 @@
+# Packages
+import numpy as np
+import pyautogui as pg
+import pytesseract as pt
+pt.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+from pyclick import HumanClicker
+hc = HumanClicker()
+pg.FAILSAFE=True
+
+# randomized coordinate boundaries for mouse movement
+sx=np.random.randint(1800, 1900)
+sy=np.random.randint(400, 500)
+ex=np.random.randint(300, 350)
+ey=np.random.randint(400, 500)
+tr=np.random.randint(2, 3)
+# mouse movement utilizing bezier curve+left button drag
+hc.move((ex, ey), tr)
+pg.mouseDown()
+hc.move((sx, sy), tr)
+pg.mouseUp()
