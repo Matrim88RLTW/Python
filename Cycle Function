@@ -29,7 +29,7 @@ def rotation() :
 # cycle windows function
 def next() :
     rand = np.random.randint(75, 90)
-    pg.getWindowsWithTitle("League of Kingdoms")[2].activate()
+    pg.getWindowsWithTitle("WINDOW NAME HERE!")[2].activate()
     time.sleep(rand)
     rotation()
 # screen refresh
