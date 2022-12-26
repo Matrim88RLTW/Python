@@ -1,0 +1,79 @@
+import tkinter as tk
+
+class SearchBot:
+    def __init__(self, search_engines):
+        self.search_engines = search_engines
+
+    def search(self, query, filters=None):
+        results = []
+        for engine in self.search_engines:
+            engine_results = engine.search(query, filters)
+            results.extend(engine_results)
+        return results
+
+class SearchEngine:
+    def search(self, query, filters=None):
+        pass
+
+class GoogleSearchEngine(SearchEngine):
+    def search(self, query, filters=None):
+        # Perform the search using the Google API
+
+class BingSearchEngine(SearchEngine):
+    def search(self, query, filters=None):
+        # Perform the search using the Bing API
+
+class YahooSearchEngine(SearchEngine):
+    def search(self, query, filters=None):
+        # Perform the search using the Yahoo API
+
+class SearchBotGUI:
+    def __init__(self, bot):
+        self.bot = bot
+        self.root = tk.Tk()
+        self.root.title('Search Bot')
+
+        # Create the search entry and search button
+        self.query_entry = tk.Entry(self.root)
+        self.query_button = tk.Button(self.root, text='Search', command=self.on_search)
+
+        # Create the filters entry
+        self.filters_entry = tk.Entry(self.root)
+
+        # Create the results list
+        self.results_list = tk.Listbox(self.root)
+
+        # Use grid layout to position the widgets
+        self.query_entry.grid(row=0, column=0)
+        self.query_button.grid(row=0, column=1)
+        self.filters_entry.grid(row=1, column=0)
+        self.results_list.grid(row=2, column=0, columnspan=2)
+
+    def on_search(self):
+        # Get the search query and filters
+        query = self.query_entry.get()
+        filters = self.filters_entry.get()
+
+        # Perform the search
+        results = self.bot.search(query, filters)
+
+        # Clear the results list
+        self.results_list.delete(0, tk.END)
+
+        # Populate the results list
+        for result in results:
+            self.results_list.insert(tk.END, result)
+
+    def run(self):
+        self.root.mainloop()
+
+def main():
+    # Create the search bot
+    bot = SearchBot([GoogleSearchEngine(), BingSearchEngine(), YahooSearchEngine()])
+
+    # Create the GUI
+    gui = SearchBotGUI(bot)
+    gui.run()
+
+if __name__ == '__main__':
+    main()
