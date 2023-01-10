@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Code Portfolio</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/code-portfolio.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#c++">C++</a></li>
+                <li><a href="#python">Python</a></li>
+                <li><a href="#machine-learning">Machine Learning</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="animation">
+        <div id="planet1" class="planet"></div>
+        <div id="planet2" class="planet"></div>
+    </div>
+    <main>
+        {% for section in sections %}
+            <section id="{{ section.id }}">
+                <h2>{{ section.title }}</h2>
+                <div class="code-window" id="code-window-{{ forloop.counter }}">
+                    <div class="code-editor">
+                        <pre>{{ section.code }}</pre>
+                    </div>
+                </div>
+            </section>
+        {% endfor %}
+        <section id="contact">
+            <h2>Contact Me</h2>
+            <form action="submit-form" method="post">
+                {% csrf_token %}
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name"><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email"><br>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message"></textarea><br>
+                <input type="submit" value="Send">
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>Copyright 2021 My Code Portfolio</p>
+    </footer>
+    <script>
+        // Code to increase the size of the code windows when clicked
+        var codeWindows = document.getElementsByClassName("code-window");
+        for (var i = 0; i < codeWindows.length; i++) {
+            codeWindows[i].onclick = function() {
+                this.classList.toggle("expanded");
+            }
+        }
+    </script>
+</body>
+</html>
