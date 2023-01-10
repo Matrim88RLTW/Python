@@ -1,0 +1,64 @@
+import numpy as np
+import pyautogui as pg
+from pyclick import HumanClicker
+import cv2
+
+hc = HumanClicker()
+pg.FAILSAFE = True
+pg.pause = 2
+
+def move(direction):
+    sx, sy = np.random.randint(1800, 1900), np.random.randint(400, 500)
+    ex, ey = np.random.randint(300, 350), np.random.randint(400, 500)
+    tr = np.random.randint(0.1, 3)
+    hc.move((sx, sy)) if direction == "right" else hc.move((ex, ey), tr)
+    pg.mouseDown()
+    hc.move((ex, ey)) if direction == "right" else hc.move((sx, sy), tr)
+    pg.mouseUp()
+
+def share():
+    sel_var1, sel_var2 = np.random.randint(1, 5), np.random.randint(5, 7)
+    x, y = pg.locateCenterOnScreen("share.png", confidence=0.6)
+    if x is not None and y is not None:
+        pg.click(x=x + sel_var1, y=y - sel_var2)
+        pg.click(x=1135 + sel_var1, y=538 + sel_var2)
+        pg.click(x=963 + sel_var1, y=708 + sel_var2)
+
+
+def finder():   
+    #E/C/Startup
+    # Need automatic initialization of boundaries ###################################
+    sct = mss.mss()
+    dimensions = {
+            'left': 0,
+            'top': 1,
+            'width': 1920,
+            'height': 1080
+        }
+    # Need an input or cycle function to cycle target #################################
+    target = cv2.imread('crystal_mine.png', cv2.IMREAD_UNCHANGED)
+    # Sys
+    while True:
+        if startUp:  
+            # Converts bounded area
+            scr = np.array(sct.grab(dimensions))
+        # Cut off alpha
+        scr_remove = scr[:,:,:3]
+        # Magic
+        result = cv2.matchTemplate(scr_remove, target, cv2.TM_CCOEFF_NORMED)    
+        _, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+        # Threshold
+        detected = False
+        if max_val > .85:
+                detected = True
+                share()
+        else:
+            moveRight()
+print('Press S to start, Q to stop once started')
+keyboard.wait('s')
+while True:
+    for i in range(0,50,1):
+        cv2.waitKey(1)
+        if keyboard.is_pressed('q'):
+            sys.exit()
+        finder()
