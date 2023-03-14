@@ -1,0 +1,64 @@
+# Imports = pyspark, logging, and separate security module which utilizes pandas
+import logging
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+import SecOps_module.py  
+
+
+# Set up logging configuration
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s]: %(message)s",
+    handlers=[logging.StreamHandler()]
+)
+
+# Initialize the Spark session
+spark = SparkSession.builder \
+    .appName("SCADA Data Transformation with Debugging") \
+    .getOrCreate()
+
+logging.debug("Spark session initialized")
+
+# Validate the input file
+input_file_path = "input_data.csv"
+if not devsecops_module.validate_input_file(input_file_path):
+    logging.error("Input file validation failed")
+    spark.stop()
+    exit(1)
+
+# Read the input CSV file into a DataFrame
+input_data = spark.read.csv(input_file_path, header=True, inferSchema=True)
+logging.debug("Input data loaded")
+
+
+# Define the schema for the output data
+output_data_schema = [
+    "timestamp",
+    "sensor_type",
+    "value"
+]
+
+# Select only the columns specified in the output schema
+filtered_data = input_data.select(output_data_schema)
+logging.debug("Data filtered based on output schema")
+
+# Separate the data streams based on sensor type
+pressure_sensors = filtered_data.filter(col("sensor_type") == "pressure")
+ESDs = filtered_data.filter(col("sensor_type") == "ESD")
+PLCs = filtered_data.filter(col("sensor_type") == "PLC")
+Wellhead_POCs = filtered_data.filter(col("sensor_type") == "Wellhead_POC")
+logging.debug("Data streams separated based on sensor type")
+
+# Save each data stream to a separate Parquet file in the specified output folder
+pressure_sensors.write.parquet("output_folder/pressure_sensors.parquet")
+logging.debug("Pressure sensors data saved")
+ESDs.write.parquet("output_folder/ESDs.parquet")
+logging.debug("ESDs data saved")
+PLCs.write.parquet("output_folder/PLCs.parquet")
+logging.debug("PLCs data saved")
+Wellhead_POCs.write.parquet("output_folder/Wellhead_POCs.parquet")
+logging.debug("Wellhead POCs data saved")
+
+# Stop the Spark session
+spark.stop()
+logging.debug("Spark session stopped")
